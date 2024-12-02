@@ -1,9 +1,11 @@
+use std::ops::Mul;
+
 advent_of_code::solution!(1);
 
 pub fn part_one(input: &str) -> Option<u32> {
-    /* this first example is copied from [matthsp](https://github.com/matthsp/aoc-2024-rust/tree/main) 
-     I have zero Rust experience, aside from reading the first 4 chapters of "The Book" this was a little flight check to make 
-     sure I had AOC configured correctly */
+    /* this first example is copied from [matthsp](https://github.com/matthsp/aoc-2024-rust/tree/main)
+    I have zero Rust experience, aside from reading the first 4 chapters of "The Book" this was a little flight check to make
+    sure I had AOC configured correctly */
 
     let (mut left, mut right) = input
         .lines()
@@ -32,7 +34,23 @@ pub fn part_one(input: &str) -> Option<u32> {
 }
 
 pub fn part_two(input: &str) -> Option<u32> {
-    let (mut left, mut right) = input.lines().map
+    let (mut left, mut right): (Vec<u32>, Vec<u32>) = input
+        .lines()
+        .map(|l| {
+            let mut split = l.split_whitespace();
+            let left = split.next().unwrap().parse::<u32>().unwrap();
+            let right = split.next().unwrap().parse::<u32>().unwrap();
+            (left, right)
+        })
+        .unzip();
+
+    let counts: u32 = left
+        .iter()
+        .map(|l| l * right.iter().filter(|&x| x == l).count() as u32)
+        .sum();
+
+    println!("{}", counts);
+    Some(counts)
 }
 
 #[cfg(test)]
